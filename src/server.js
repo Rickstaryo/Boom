@@ -19,20 +19,22 @@ const server = http.createServer(app);
 // web socket Server 
 const wss = new WebSocketServer({ server });
 
-wss.on("connection",(backSocket)=>{
-    //1. Registering a listener When Browser Connect to server
-    console.log("We got connected to Browser");
+function onSocketClose(){
+    console.log("DisConnected From the Browser");
+}
+//0. Message save Container
+const messageSockets=[];
 
-    //2.  Registering a listener When Browser Disconncet to Server
-    backSocket.on("close", ()=>{
-        console.log("Disconnected from Browser")
-    });
-    // 3. Resgistering if fronend send a message to backEnd 
-    backSocket.on("message",(message)=>{
-        console.log(message.toString('utf8'));
-    });
-    // 4. Sending a message to frontend 
-    backSocket.send("hello!!");
+wss.on("connection",(backSocket)=>{
+    // 1. When Chrombrowser sending  a message this message sockets receiving the backsockets
+    messageSockets.push(backSocket);
+    console.log("We got connected to Browser");
+    backSocket.on("close", onSocketClose);
+    // 2. Using Foreach to every single time saved message sending to each different Browser.
+    backSocket.on("message",(message)=> {
+        const messageString = message.toString('utf8');
+        messageSockets.forEach(aSocket => aSocket.send(messageString));
+    })
 });
 
 server.listen(3000, handleListen);
