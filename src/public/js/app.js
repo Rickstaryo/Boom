@@ -1,1 +1,1 @@
-alert("Hello");
+const frontSocket = new WebSocket(`ws://localhost:3000`);
