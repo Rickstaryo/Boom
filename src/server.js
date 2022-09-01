@@ -38,3 +38,12 @@ wss.on("connection",(backSocket)=>{
 });
 
 server.listen(3000, handleListen);
+
+{
+    type:"message";
+    payload:"hello everyone!";
+}
+{
+    type:"nickname";
+    payload:"ricky";
+}

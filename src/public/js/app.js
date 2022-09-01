@@ -1,6 +1,13 @@
 const messageList=document.querySelector("ul");
-const messageForm=document.querySelector("form");
+const nicknameForm=document.querySelector("#nick");
+const messageForm=document.querySelector("#message");
 const frontSocket = new WebSocket(`ws://localhost:3000`);
+
+function makeMessage(type, payload) {
+    const msg = { type, payload };
+    return JSON.stringify(msg);
+}
+
 
 // 1.Conecting 'Server' Browser to FrontEnd
 frontSocket.addEventListener("open", ()=>{
@@ -9,7 +16,9 @@ frontSocket.addEventListener("open", ()=>{
 
 // 2. Showing message on Console
 frontSocket.addEventListener("message", (message)=>{
-    console.log("New Message", message.data);
+    const li =  document.createElement("li");
+    li.innerText= message.data;
+    messageList.append(li);
 });
 
 // 3. Closing the 'Server' Backend to FrontEnd 
@@ -21,10 +30,14 @@ frontSocket.addEventListener("close" ,()=>{
 function handleSubmit(event){
     event.preventDefault();
     const input= messageForm.querySelector("input");
-    frontSocket.send(input.value);
+    frontSocket.send(makeMessage("new_Message",input.value));
     input.value="";
+}
+function handleNickSubmit(event) {
+    event.preventDefault();
+    const input = nicknameForm.querySelector("input");
+    frontSocket.send(makeMessage("nickname", input.value));
+}
 
-};
-
-
-messageForm.addEventListener("submit",handleSubmit);
+messageForm.addEventListener("submit", handleSubmit);
+nicknameForm.addEventListener("submit", handleNickSubmit);
