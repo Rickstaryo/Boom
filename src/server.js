@@ -52,25 +52,3 @@ server.listen(3000, handleListen);
 
 
 
-// wss.on("connection",(backSocket)=>{
-//     // 1. When Chrombrowser sending  a message this message sockets receiving the backsockets
-//     messageSockets.push(backSocket);
-//     backSocket["nickname"] ="Anon";
-//     console.log("We got connected to Browser");
-//     backSocket.on("close", onSocketClose);
-//     // 2. Using Foreach to every single time saved message sending to each different Browser.
-//     backSocket.on("message",(message)=> {
-//         const messageString = message.toString("utf-8"); 
-//         const parsed = JSON.parse(messageString);
-//         switch(messageString.type){
-//             case "new_message":
-//                 messageSockets.forEach(aSocket => aSocket.send(`${backSocket.nicknmame}: ${messageString.payload}`))
-//             break;
-//             // puting nickname to Socket 
-//             case "nickname":
-//                 backSocket["nicknmame"]=message.payload;
-//             break;   
-//         }
-//     })
-// });
-// server.listen(3000, handleListen);

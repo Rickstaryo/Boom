@@ -16,9 +16,7 @@ frontSocket.addEventListener("open", ()=>{
 
 // 2. Showing message on Console
 frontSocket.addEventListener("message", (message)=>{
-    const li =  document.createElement("li");
-    li.innerText= message.data;
-    messageList.append(li);
+
 });
 
 // 3. Closing the 'Server' Backend to FrontEnd 
@@ -31,6 +29,9 @@ function handleSubmit(event){
     event.preventDefault();
     const input= messageForm.querySelector("input");
     frontSocket.send(makeMessage("new_message",input.value));
+    const li =  document.createElement("li");
+    li.innerText= `You: ${input.value}`;
+    messageList.append(li);
     input.value="";
 }
 function handleNickSubmit(event) {
