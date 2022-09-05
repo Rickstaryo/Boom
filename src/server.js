@@ -20,11 +20,12 @@ const wsServer = SocketIO(httpServer);
 
 
 wsServer.on("connection", (socket) => {
+    socket.onAny((event)=>{
+        console.log(`Socket events:${event}`)
+    })
     socket.on("enter_room", (roomName, done) => {
-        console.log(roomName);
-        setTimeout(()=> {
-            done("Msg from backend");
-        }, 15000);
+            socket.join(roomName);
+            done();
 
     });
 });
