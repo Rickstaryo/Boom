@@ -27,7 +27,18 @@ wsServer.on("connection", (socket) => {
             socket.join(roomName);
             done();
             socket.to(roomName).emit("welcome");
-    });
+    // Disconnecting 
+    socket.on("disconnecting", ()=> {
+        socket.rooms.forEach(room =>{ socket.to(room).emit("is disconected");
+            
+        });
+    })
+    // Sending a msg to Backend
+    socket.on("new_message", (msg, room, done) => {
+        socket.to(room).emit("new_message", msg);
+        done();
+    })
+});
 });
 
 
