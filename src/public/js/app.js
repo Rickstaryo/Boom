@@ -23,4 +23,18 @@ function handleRoomSubmit(event) {
     input.value = "";
   }
   
-  form.addEventListener("submit", handleRoomSubmit);
+
+// Show a message when you enter the room 
+function addMessage(message){
+    const ul = room.querySelector("ul");
+    const li = document.createElement("li");
+    li.innerText = message;
+    ul.appendChild(li);
+};
+
+socket.on("welcome",()=>{
+    addMessage("someone joined");
+});
+
+
+form.addEventListener("submit", handleRoomSubmit);
