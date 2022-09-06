@@ -9,12 +9,20 @@ room.hidden = true;
 let roomName;
 function handleMessageSubmit(event){
     event.preventDefault();
-    const input = room.querySelector("input");
+    const input = room.querySelector("#message input");
     const value = input.value;
     socket.emit("new_message", input.value,roomName,()=>{
         addMessage(`You: ${value}`);
     });
     input.value=""
+}
+// Nickname submit
+
+function hanldeNicknameSubmit(event){
+    event.preventDefault();
+    const input = room.querySelector("#name input");
+    const value = input.value;
+    socket.emit("nickname", input.value);
 }
 
 
@@ -23,8 +31,10 @@ function showRoom() {
   room.hidden = false;
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
-  const form = room.querySelector("form");
- form.addEventListener("submit", handleMessageSubmit);
+  const msgForm = room.querySelector("#message");
+  const nameForm = room.querySelector("#name")
+ msgForm.addEventListener("submit", handleMessageSubmit);
+ nameForm.addEventListener("submit",hanldeNicknameSubmit);
 }
 
 function handleRoomSubmit(event) {
@@ -44,12 +54,12 @@ function addMessage(message){
     ul.appendChild(li);
 };
 
-socket.on("welcome",()=>{
-    addMessage("someone joined");
+socket.on("welcome",(user)=>{
+    addMessage(`${user} arrived!`);
 });
 // FE About Disconnect
-socket.on("bye",() =>{
-    addMessage("Someone left")
+socket.on("bye",(left) =>{
+    addMessage(`${left} left!`);
 })
 
 // Recieving a msg from BE to FE
