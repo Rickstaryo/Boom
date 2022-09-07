@@ -6,63 +6,56 @@ const room = document.getElementById("room");
 
 room.hidden = true;
 
+form.addEventListener("submit", handleRoomSubmit);
+
 let roomName;
-function handleMessageSubmit(event){
-    event.preventDefault();
-    const input = room.querySelector("#message input");
-    const value = input.value;
-    socket.emit("new_message", input.value,roomName,()=>{
-        addMessage(`You: ${value}`);
-    });
-    input.value=""
-}
-// Nickname submit
-
-function hanldeNicknameSubmit(event){
-    event.preventDefault();
-    const input = room.querySelector("#name input");
-    const value = input.value;
-    socket.emit("nickname", input.value);
-}
-
+let userName;
 
 function showRoom() {
-  welcome.hidden = true;
   room.hidden = false;
+  welcome.hidden = true;
+
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
-  const msgForm = room.querySelector("#message");
-  const nameForm = room.querySelector("#name")
- msgForm.addEventListener("submit", handleMessageSubmit);
- nameForm.addEventListener("submit",hanldeNicknameSubmit);
+
+  const msgForm = room.querySelector("#msg");
+  msgForm.addEventListener("submit", handleMessageSubmit);
 }
 
+
+function handleMessageSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector("#msg input");
+  const value = input.value;
+  socket.emit("new_msg", input.value, roomName, () => {
+    addMessage(`You: ${value}`);
+  });
+  input.value = "";
+}
 function handleRoomSubmit(event) {
-    event.preventDefault();
-    const input = form.querySelector("input");
-    socket.emit("enter_room", input.value, showRoom);
-    roomName = input.value;
-    input.value = "";
-  }
-  
+  event.preventDefault();
+  const roomInput = form.querySelector("#roomName");
+  const nameInput = form.querySelector("#userName");
+  socket.emit("enter_room", roomInput.value, nameInput.value, showRoom);
+  roomName = roomInput.value;
+  userName = nameInput.value;
+  roomInput.value = "";
+  userInput.value = "";
+}
 
-// Show a message when you enter the room 
-function addMessage(message){
-    const ul = room.querySelector("ul");
-    const li = document.createElement("li");
-    li.innerText = message;
-    ul.appendChild(li);
-};
+function addMessage(msg) {
+  const ul = room.querySelector("ul");
+  const li = document.createElement("li");
+  li.innerText = msg;
+  ul.appendChild(li);
+}
 
-socket.on("welcome",(user)=>{
-    addMessage(`${user} arrived!`);
-});
-// FE About Disconnect
-socket.on("bye",(left) =>{
-    addMessage(`${left} left!`);
+socket.on("welcome", (user) => {
+  addMessage(`${user} Joined!`);
 })
 
-// Recieving a msg from BE to FE
-socket.on("new_message", addMessage);
+socket.on("bye", (user) => {
+  addMessage(`${user} Disconnect.`);
+})
 
-form.addEventListener("submit", handleRoomSubmit);
+socket.on("new_msg", addMessage);
