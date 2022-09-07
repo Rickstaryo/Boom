@@ -27,7 +27,7 @@ function handleMessageSubmit(event) {
   event.preventDefault();
   const input = room.querySelector("#msg input");
   const value = input.value;
-  socket.emit("new_msg", input.value, roomName, () => {
+  socket.emit("new_message", input.value, roomName, () => {
     addMessage(`You: ${value}`);
   });
   input.value = "";
@@ -58,4 +58,4 @@ socket.on("bye", (user) => {
   addMessage(`${user} Disconnect.`);
 })
 
-socket.on("new_msg", addMessage);
+socket.on("new_message", addMessage);
