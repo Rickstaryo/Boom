@@ -18,10 +18,33 @@ app.get("/*", (_, res) => res.redirect("/"));
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
+function publicRooms(){
+  /*
+  const sids = wsServer.sockets.adapter.sids;
+  const room = wsServer.sockets.adapter.rooms;
+*/
+const{sockets:
+    {adpater:
+      {sids,rooms
+      }
+    }
+  } = wsServer;
+  const publicRooms=[];
+  rooms.forEach((_,key)=>{
+    if(sids.get(key) === undefiend){
+      publicRooms.push(key);
+  }
+  });
+  return publicRooms;
+}
 
 wsServer.on("connection", (socket) => {
     socket["nickname"] = "Anon";
-    socket.onAny((event) => console.log(`event: ${event}`));
+    socket.onAny((event) => {
+      console.log(wsServer.sockets.adapter);
+      console.log(`event: ${event}`);
+      
+    });
 
     socket.on("enter_room", (roomName, userName, done) => {  
       socket.join(roomName);
