@@ -40,7 +40,7 @@ function handleRoomSubmit(event) {
   roomName = roomInput.value;
   userName = nameInput.value;
   roomInput.value = "";
-  userInput.value = "";
+  nameInput.value = "";
 }
 
 function addMessage(msg) {
@@ -58,4 +58,12 @@ socket.on("bye", (user) => {
   addMessage(`${user} Disconnect.`);
 })
 
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  rooms.forEach(room=>{
+    const li =document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
 socket.on("new_message", addMessage);
